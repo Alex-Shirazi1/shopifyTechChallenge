@@ -7,11 +7,7 @@ const View = () => {
 const[description,setDescription] =React.useState('');
 const[title,setTitle] = React.useState('');
 const[price,setPrice] = React.useState('');
-const[email,setEmail] = React.useState('');
 
-const handleEmail = (e)=>{
-  setEmail(e.target.value);
-}
 
 const handlePrice = (e)=>{
 setPrice(e.target.value);
@@ -25,7 +21,6 @@ setTitle(e.target.value);
     setDescription(e.target.value);
   };
 const data= {
-  email:email,
   title: title,
   price: price,
   description: description,
@@ -34,7 +29,7 @@ const data= {
   };
 const handlePost = () => {
   const json = JSON.stringify(data)
-    axios.post('localhost:9000/api/createListing', json)
+    axios.post('api/createListing', json)
    // .then(document.write(json));
 .then((response) =>{
 alert(response.data);
@@ -45,27 +40,23 @@ alert(response.data);
 
 
   //View listings
-const [titleDelete, setTitleDelete] = React.useState('');
   const[counter, setCounter] = React.useState('');
   var [listing, setListing] = React.useState([]);
  
 
   
-  const handleTitle = (e) => {
-    setTitleDelete(e.target.value);
-  }
-
+ 
 
 
   const count = () =>{
-    axios.get('localhost:9000/api/countListings').then((response) =>{
+    axios.get('/api/countListings').then((response) =>{
      setCounter(response.data);
     })
   }
 
 
   const all =  () => {
-   axios.get('localhost:9000/api/viewListings')
+   axios.get('api/viewListings')
  
   .then((res)=>{
 console.log(res.data); 
@@ -85,18 +76,18 @@ count();
 
 //empty json for some reason
 
-
-
-const deletePost = () => {
-const title = titleDelete;
-
-axios.post('/api/deleteListing', title)
+const removeListing = (data)=>{
+  const obj = JSON.stringify(data);
+  console.log(obj);
+  axios.post('api/removeListing', obj)
 .then((res)=>{
   console.log(res);
   window.location.reload();
-
 })
 }
+
+
+
  
 
   return (
@@ -104,9 +95,6 @@ axios.post('/api/deleteListing', title)
 <div>
       <h1>Post</h1>
       <form>
-      <label>Email </label>
-      <input value = {email} onChange={handleEmail}/>
-      <br/>
       <label>Title </label>
       <input value = {title} onChange={handlePostTitle}/>
       <br/>
@@ -125,7 +113,7 @@ axios.post('/api/deleteListing', title)
 
 
       <br/>
-  <h1> There are {counter} Posts Displayed!</h1>
+  <h1> There are {counter} Listings Displayed!</h1>
     <div className="post">
       <br/>
     {listing.map((data,key)=>{
@@ -135,25 +123,21 @@ axios.post('/api/deleteListing', title)
           
          <h1>Title: {data.title}</h1>
           <br/>
-          <label>email: {data.email}</label>
-         <br/>
          <label>Price: {data.price}</label>
          <br/>
          <label>Description: {data.description}</label>
           <br/>
-          <label></label>
+         
+         <br/>
           <br/>
-          
+          <button type="submit" onClick={()=>removeListing(data)}>remove</button>
         </div>
        
         
       )
      
     })}
-    <label>Delete by Title<input value = {titleDelete} onChange ={handleTitle} type="text"/></label>
-    <br/>
-    <button onClick={deletePost} >Delete!</button>
-
+   
     </div>
     </div>
   );
