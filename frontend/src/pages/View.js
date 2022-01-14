@@ -2,12 +2,53 @@ import React from 'react';
 import axios from 'axios';
 const View = () => {
 
-//post logic
+//init variables
 const[description,setDescription] =React.useState('');
 const[title,setTitle] = React.useState('');
 const[price,setPrice] = React.useState('');
 const[photo,setPhoto]= React.useState('');
 
+var[descriptionEdit,setDescriptionEdit] =React.useState('');
+var[titleEdit,setTitleEdit] = React.useState('');
+var[priceEdit,setPriceEdit] = React.useState('');
+var[photoEdit,setPhotoEdit]= React.useState('');
+
+var[descriptionEdit1,setDescriptionEdit1] =React.useState('');
+var[titleEdit1,setTitleEdit1] = React.useState('');
+var[priceEdit1,setPriceEdit1] = React.useState('');
+var[photoEdit1,setPhotoEdit1]= React.useState('');
+
+  //View listings
+  const[counter, setCounter] = React.useState('');
+  var [listing, setListing] = React.useState([]);
+ 
+//data
+const data= {
+  title: title,
+  price: price,
+  description: description,
+  photo: photo,
+  };
+
+  const dataToBeEdited = {
+    title: titleEdit,
+    price: priceEdit,
+    description: descriptionEdit,
+    photo: photoEdit,
+  };
+  
+  
+  const oldData = {
+    title: titleEdit1,
+    price: priceEdit1,
+    description: descriptionEdit1,
+    photo: photoEdit1,
+  };
+  
+
+
+
+  //handlers
 
 const handlePrice = (e)=>{
 setPrice(e.target.value);
@@ -20,15 +61,9 @@ setTitle(e.target.value);
   const handleDescription =(e)=>{
     setDescription(e.target.value);
   };
-const data= {
-  title: title,
-  price: price,
-  description: description,
-  photo: photo,
-  };
 
   const handlePhoto=(e)=>{
-   // setPhoto(e.target.files[0]);
+    setPhoto(e.target.files[0]);
    let photoFile=e.target.files[0];
     console.log(e.target.files);
     let reader = new FileReader();
@@ -39,32 +74,39 @@ const data= {
     }
   }  
 
-const handlePost = () => {
-  const json = JSON.stringify(data)
-    axios.post('api/createListing', json)
-   // .then(document.write(json));
-.then((response) =>{
-console.log(response);
-})
-}
 
 
-
-  //View listings
-  const[counter, setCounter] = React.useState('');
-  var [listing, setListing] = React.useState([]);
- 
-
+const handlePriceEdit = (e)=>{
+  setPriceEdit(e.target.value);
+  }
+  const handlePostTitleEdit = (e) =>{
   
- 
-
-
+  setTitleEdit(e.target.value);
+  
+  }
+  
+    const handleDescriptionEdit =(e)=>{
+      setDescriptionEdit(e.target.value);
+    };
+  
+    const handlePhotoEdit=(e)=>{
+      setPhotoEdit(e.target.files[0]);
+     let photoFile=e.target.files[0];
+      console.log(e.target.files);
+      let reader = new FileReader();
+      reader.readAsDataURL(photoFile);
+      reader.onload=(e)=>{
+        console.log(e.target.result);
+        setPhotoEdit(e.target.result);
+      }
+    }  
+  
+  
   const count = () =>{
     axios.get('/api/countListings').then((response) =>{
      setCounter(response.data);
     })
   }
-
 
   const all =  () => {
    axios.get('api/viewListings')
@@ -84,8 +126,18 @@ count();
 
 
 },[])
+//create
 
-//empty json for some reason
+const handlePost = () => {
+  const json = JSON.stringify(data)
+    axios.post('api/createListing', json)
+.then((response) =>{
+console.log(response);
+})
+}
+
+
+//remove
 
 const removeListing = (data)=>{
   const obj = JSON.stringify(data);
@@ -97,6 +149,24 @@ const removeListing = (data)=>{
 })
 }
 
+//edit
+
+
+const editMode=(data)=>{
+  setTitleEdit(data.title);
+  setPriceEdit(data.price);
+  setDescriptionEdit(data.description);
+  setPhotoEdit(data.photo);
+  
+  setTitleEdit1(data.title);
+  setPriceEdit1(data.price);
+  setDescriptionEdit1(data.description);
+  setPhotoEdit1(data.photo);
+  
+  console.log(data.photo);
+  console.log(titleEdit);
+  }
+  
 const editListing = ()=>{
   const json1 = JSON.stringify(oldData);
   const json2 = JSON.stringify(dataToBeEdited);
@@ -109,79 +179,6 @@ const editListing = ()=>{
   })
 }
 
-var[descriptionEdit,setDescriptionEdit] =React.useState('');
-var[titleEdit,setTitleEdit] = React.useState('');
-var[priceEdit,setPriceEdit] = React.useState('');
-var[photoEdit,setPhotoEdit]= React.useState('');
-
-
-const handlePriceEdit = (e)=>{
-setPriceEdit(e.target.value);
-}
-const handlePostTitleEdit = (e) =>{
-
-setTitleEdit(e.target.value);
-
-}
-
-  const handleDescriptionEdit =(e)=>{
-    setDescriptionEdit(e.target.value);
-  };
-
-  const handlePhotoEdit=(e)=>{
-    setPhotoEdit(e.target.files[0]);
-   let photoFile=e.target.files[0];
-    console.log(e.target.files);
-    let reader = new FileReader();
-    reader.readAsDataURL(photoFile);
-    reader.onload=(e)=>{
-      console.log(e.target.result);
-      setPhotoEdit(e.target.result);
-    }
-  }  
-
-const dataToBeEdited = {
-  title: titleEdit,
-  price: priceEdit,
-  description: descriptionEdit,
-  photo: photoEdit,
-};
-
-var[descriptionEdit1,setDescriptionEdit1] =React.useState('');
-var[titleEdit1,setTitleEdit1] = React.useState('');
-var[priceEdit1,setPriceEdit1] = React.useState('');
-var[photoEdit1,setPhotoEdit1]= React.useState('');
-
- 
-
-const oldData = {
-  title: titleEdit1,
-  price: priceEdit1,
-  description: descriptionEdit1,
-  photo: photoEdit1,
-};
-
-
-
-
-
-const editMode=(data)=>{
-setTitleEdit(data.title);
-setPriceEdit(data.price);
-setDescriptionEdit(data.description);
-setPhotoEdit(data.photo);
-
-setTitleEdit1(data.title);
-setPriceEdit1(data.price);
-setDescriptionEdit1(data.description);
-setPhotoEdit1(data.photo);
-
-console.log(data.photo);
-console.log(titleEdit);
-}
-
-
- 
 
   return (
  <div>
