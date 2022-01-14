@@ -3,7 +3,6 @@ import './App.css';
 import { Switch, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import View from './pages/View';
-
 const App=()=>{
 
 
@@ -14,7 +13,6 @@ const App=()=>{
       <nav>
       <Link to="/"> Home </Link>
       <Link to="/view"> View </Link>
-      
 
       </nav>
       <Switch>

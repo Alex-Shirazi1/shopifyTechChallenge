@@ -43,8 +43,12 @@ public class SparkDemo {
               if(postListObject.title.length()==0||postListObject.price.length()==0||postListObject.description.length()==0){
               return "null data is invalid";
               }
+              String images="/images";
 
-              Document doc = new Document("title",postListObject.title).append("price",postListObject.price).append("description", postListObject.description);
+              String photo = postListObject.photo;
+              photo.replace("data:image/png;base64,","");
+
+              Document doc = new Document("title",postListObject.title).append("price",postListObject.price).append("description", postListObject.description).append("photo",postListObject.photo);
               myCollection.insertOne(doc);
               return "Post successfully created!";
             });
@@ -63,30 +67,8 @@ public class SparkDemo {
           Document doc = new Document("title",postListObject.title).append("price",postListObject.price).append("description", postListObject.description);
         myCollection.deleteOne(doc);
           System.out.println("remove completed");
-        return "deleted bitch!";
+        return "deleted!";
       });
-
-
-    post("/api/deleteListing",(req,res)-> {
-      System.out.println("Post being deleted");
-      // System.out.println(req.body());
-      //make object to transfer json data!
-      System.out.println(req.body());
-     // PostListObject postListObject = gson.fromJson(req.body(),PostListObject.class);
-      //Document doc = new Document("type", "post").append("email", postListObject.email).append("description", postListObject.description);
-    //  Document doc = new Document("title",postListObject.title).append("price",postListObject.price).append("description", postListObject.description);
-        List<Document> documents = myCollection.find().limit(100).into(new ArrayList<Document>());
-        documents.forEach(document ->{
-           if(document.getString("title").equals(req.body())) {
-               myCollection.deleteOne(document);
-           }
-        });
-        System.out.println("end");
-     return "Post successfully deleted!";
-    });
-
-
-
 
 
 get("/api/viewListings",(req,res)->{
@@ -96,7 +78,7 @@ get("/api/viewListings",(req,res)->{
   List<String> list = new ArrayList<>();
   documents.forEach(document -> {
 
-    PostListObject postListObject = new PostListObject(document.getString("title"),document.getString("price"),document.getString("description"));
+    PostListObject postListObject = new PostListObject(document.getString("title"),document.getString("price"),document.getString("description"),document.getString("photo"));
 
 
     String json = gson.toJson(postListObject);
@@ -117,21 +99,6 @@ get("/api/countListings",(req,res)->{
   int result = (int) counter;
   return result;
 });
-
-// 3 routes
-    //1 to make a post
-//    get("/api/postListing",(req,res)->{
-//
-//      req.queryMap("email").value();
-//      req.queryMap("description").value();
-//
-//      return "Post Sucessfully made";
-//    });
-
-
-    //1 to view all posts
-    //1 to delete a post
-
 
   }
 }

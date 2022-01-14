@@ -1,12 +1,15 @@
 import React from 'react';
 import axios from 'axios';
-
+import {Link} from 'react-router-dom';
+import EditProfile from './EditProfile';
+import logo from '../logo.svg';
 const View = () => {
 
 //post logic
 const[description,setDescription] =React.useState('');
 const[title,setTitle] = React.useState('');
 const[price,setPrice] = React.useState('');
+const[photo,setPhoto]= React.useState('');
 
 
 const handlePrice = (e)=>{
@@ -24,16 +27,27 @@ const data= {
   title: title,
   price: price,
   description: description,
-  
-    
+  photo: photo,
   };
+
+  const handlePhoto=(e)=>{
+   // setPhoto(e.target.files[0]);
+   let photoFile=e.target.files[0];
+    console.log(e.target.files);
+    let reader = new FileReader();
+    reader.readAsDataURL(photoFile);
+    reader.onload=(e)=>{
+      console.log(e.target.result);
+      setPhoto(e.target.result);
+    }
+  }  
+
 const handlePost = () => {
   const json = JSON.stringify(data)
     axios.post('api/createListing', json)
    // .then(document.write(json));
 .then((response) =>{
-alert(response.data);
-
+console.log(response);
 })
 }
 
@@ -86,6 +100,14 @@ const removeListing = (data)=>{
 })
 }
 
+const editListing = (data)=>{
+  const json = JSON.stringify(data);
+  axios.post('api/editListing'.json)
+  .then((res)=>{
+    console.log(res);
+    window.location.reload();
+  })
+}
 
 
  
@@ -104,6 +126,10 @@ const removeListing = (data)=>{
       <label>Description </label>
       <input value = {description} onChange={handleDescription}/>
       <br/>
+      <input type="file" name ="file"
+          accept="image/jpg,image/jpeg,image/png"
+          onChange={handlePhoto}
+          />
      
       <button onClick={handlePost}>Submit Listing</button>
       <br/>
@@ -127,9 +153,13 @@ const removeListing = (data)=>{
          <br/>
          <label>Description: {data.description}</label>
           <br/>
+          <img src={data.photo} height={100}/>
+          
          
          <br/>
           <br/>
+      <Link to={{pathname:"/EditProfile",
+    state:data}}><button>Edit</button></Link>
           <button type="submit" onClick={()=>removeListing(data)}>remove</button>
         </div>
        
