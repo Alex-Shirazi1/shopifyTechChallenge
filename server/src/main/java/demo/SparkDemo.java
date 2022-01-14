@@ -43,10 +43,7 @@ public class SparkDemo {
               if(postListObject.title.length()==0||postListObject.price.length()==0||postListObject.description.length()==0){
               return "null data is invalid";
               }
-              String images="/images";
 
-              String photo = postListObject.photo;
-              photo.replace("data:image/png;base64,","");
 
               Document doc = new Document("title",postListObject.title).append("price",postListObject.price).append("description", postListObject.description).append("photo",postListObject.photo);
               myCollection.insertOne(doc);
@@ -54,7 +51,24 @@ public class SparkDemo {
             });
 
 
+      post("/api/editListing", (req,res)->{
+          System.out.println("edit in progress");
+          System.out.println(req.body());
+          //PostListObject postListObject=gson.fromJson(req.body(),PostListObject.class);
 
+          String parser = req.body();
+          String[] jsonArray= parser.split("}",2);
+          jsonArray[0]=jsonArray[0]+"}";
+          PostListObject postListObject = gson.fromJson(jsonArray[0],PostListObject.class);
+          PostListObject postListObject1 = gson.fromJson(jsonArray[1],PostListObject.class);
+
+
+          Document oldDoc = new Document("title",postListObject.title).append("price",postListObject.price).append("description", postListObject.description);
+          Document doc = new Document("title",postListObject1.title).append("price",postListObject1.price).append("description", postListObject1.description);
+
+          myCollection.replaceOne(oldDoc,doc);
+          return "edited!";
+      });
 
 
     //delete Post
@@ -69,6 +83,7 @@ public class SparkDemo {
           System.out.println("remove completed");
         return "deleted!";
       });
+
 
 
 get("/api/viewListings",(req,res)->{

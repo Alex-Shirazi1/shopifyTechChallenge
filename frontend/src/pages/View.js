@@ -1,8 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import {Link} from 'react-router-dom';
-import EditProfile from './EditProfile';
-import logo from '../logo.svg';
 const View = () => {
 
 //post logic
@@ -100,13 +97,87 @@ const removeListing = (data)=>{
 })
 }
 
-const editListing = (data)=>{
-  const json = JSON.stringify(data);
-  axios.post('api/editListing'.json)
+const editListing = ()=>{
+  const json1 = JSON.stringify(oldData);
+  const json2 = JSON.stringify(dataToBeEdited);
+  const json3= json1+json2;
+
+  axios.post('api/editListing',json3)
   .then((res)=>{
     console.log(res);
-    window.location.reload();
+  window.location.reload();
   })
+}
+
+var[descriptionEdit,setDescriptionEdit] =React.useState('');
+var[titleEdit,setTitleEdit] = React.useState('');
+var[priceEdit,setPriceEdit] = React.useState('');
+var[photoEdit,setPhotoEdit]= React.useState('');
+
+
+const handlePriceEdit = (e)=>{
+setPriceEdit(e.target.value);
+}
+const handlePostTitleEdit = (e) =>{
+
+setTitleEdit(e.target.value);
+
+}
+
+  const handleDescriptionEdit =(e)=>{
+    setDescriptionEdit(e.target.value);
+  };
+
+  const handlePhotoEdit=(e)=>{
+    setPhoto(e.target.files[0]);
+   let photoFile=e.target.files[0];
+    console.log(e.target.files);
+    let reader = new FileReader();
+    reader.readAsDataURL(photoFile);
+    reader.onload=(e)=>{
+      console.log(e.target.result);
+      setPhoto(e.target.result);
+    }
+  }  
+
+const dataToBeEdited = {
+  title: titleEdit,
+  price: priceEdit,
+  description: descriptionEdit,
+  photo: photoEdit,
+};
+
+var[descriptionEdit1,setDescriptionEdit1] =React.useState('');
+var[titleEdit1,setTitleEdit1] = React.useState('');
+var[priceEdit1,setPriceEdit1] = React.useState('');
+var[photoEdit1,setPhotoEdit1]= React.useState('');
+
+ 
+
+const oldData = {
+  title: titleEdit1,
+  price: priceEdit1,
+  description: descriptionEdit1,
+  photo: photoEdit1,
+};
+
+
+
+
+
+const editMode=(data)=>{
+setTitleEdit(data.title);
+setPriceEdit(data.price);
+setDescriptionEdit(data.description);
+setPhotoEdit(data.photo);
+
+setTitleEdit1(data.title);
+setPriceEdit1(data.price);
+setDescriptionEdit1(data.description);
+setPhotoEdit(data.photo);
+
+console.log(data.photo);
+console.log(titleEdit);
 }
 
 
@@ -136,7 +207,26 @@ const editListing = (data)=>{
       </form>
     </div>
 
-
+<h1>Edit Form</h1>
+<form>
+      <label>Title </label>
+      <input defaultValue={titleEdit} onChange={handlePostTitleEdit}/>
+      <br/>
+      <label>Price </label>
+      <input defaultValue={priceEdit} onChange={handlePriceEdit}/>
+      <br/>
+      <label>Description </label>
+      <input defaultValue = {descriptionEdit} onChange={handleDescriptionEdit}/>
+      <br/>
+      <img src={photoEdit} height={100}/>
+      <br/>
+      <input defaultValue={photoEdit} type="file" name ="file"
+          accept="image/jpg,image/jpeg,image/png"
+          onChange={handlePhotoEdit}
+          />
+      <button onClick={editListing}>Submit Listing</button>
+      <br/>
+      </form>
 
       <br/>
   <h1> There are {counter} Listings Displayed!</h1>
@@ -157,13 +247,11 @@ const editListing = (data)=>{
           
          
          <br/>
-          <br/>
-      <Link to={{pathname:"/EditProfile",
-    state:data}}><button>Edit</button></Link>
+         <button type="submit" onClick={()=>editMode(data)}>edit</button>
           <button type="submit" onClick={()=>removeListing(data)}>remove</button>
         </div>
        
-        
+      
       )
      
     })}
@@ -179,10 +267,3 @@ const editListing = (data)=>{
 };
 
 export default View;
-/*
-
-axios.get('/api/viewListings')
-.then((res)=>{
-console.log(res);
- };
-*/

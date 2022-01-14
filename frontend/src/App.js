@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import './App.css';
 import { Switch, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
