@@ -63,8 +63,8 @@ public class SparkDemo {
           PostListObject postListObject1 = gson.fromJson(jsonArray[1],PostListObject.class);
 
 
-          Document oldDoc = new Document("title",postListObject.title).append("price",postListObject.price).append("description", postListObject.description);
-          Document doc = new Document("title",postListObject1.title).append("price",postListObject1.price).append("description", postListObject1.description);
+          Document oldDoc = new Document("title",postListObject.title).append("price",postListObject.price).append("description", postListObject.description).append("photo",postListObject.photo);;
+          Document doc = new Document("title",postListObject1.title).append("price",postListObject1.price).append("description", postListObject1.description).append("photo",postListObject1.photo);
 
           myCollection.replaceOne(oldDoc,doc);
           return "edited!";
@@ -78,7 +78,7 @@ public class SparkDemo {
           System.out.println(req.body());
 
           PostListObject postListObject = gson.fromJson(req.body(),PostListObject.class);
-          Document doc = new Document("title",postListObject.title).append("price",postListObject.price).append("description", postListObject.description);
+          Document doc = new Document("title",postListObject.title).append("price",postListObject.price).append("description", postListObject.description).append("photo",postListObject.photo);
         myCollection.deleteOne(doc);
           System.out.println("remove completed");
         return "deleted!";

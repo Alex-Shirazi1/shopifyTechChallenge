@@ -129,14 +129,14 @@ setTitleEdit(e.target.value);
   };
 
   const handlePhotoEdit=(e)=>{
-    setPhoto(e.target.files[0]);
+    setPhotoEdit(e.target.files[0]);
    let photoFile=e.target.files[0];
     console.log(e.target.files);
     let reader = new FileReader();
     reader.readAsDataURL(photoFile);
     reader.onload=(e)=>{
       console.log(e.target.result);
-      setPhoto(e.target.result);
+      setPhotoEdit(e.target.result);
     }
   }  
 
@@ -174,7 +174,7 @@ setPhotoEdit(data.photo);
 setTitleEdit1(data.title);
 setPriceEdit1(data.price);
 setDescriptionEdit1(data.description);
-setPhotoEdit(data.photo);
+setPhotoEdit1(data.photo);
 
 console.log(data.photo);
 console.log(titleEdit);
