@@ -1,4 +1,4 @@
-# shopifyTechChallenge
+# Product Managing App
 
 technologies used:
 node.js
